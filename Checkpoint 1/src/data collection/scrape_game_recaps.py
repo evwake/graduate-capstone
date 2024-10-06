@@ -4,7 +4,7 @@ from time import sleep # Adhering to rate limiting
 from bs4 import BeautifulSoup # HTML scraping library
 import re 
 
-YEAR = 2023
+YEAR = 2016
 WEEKLY_SCHEDULE_URL = ["https://espn.co.uk/nfl/fixtures/_/week/" + str(i) + "/year/" + str(YEAR) for i in range(1, 19)]
 
 headers = {
@@ -34,12 +34,15 @@ for url in WEEKLY_SCHEDULE_URL:
         if not os.path.exists("output/" + game_name):
             os.makedirs("output/" + game_name) # If the directory does not exist, create it
         story_soup = recap_soup.find('div', attrs={'class': "Story__Body t__body"}) # Get element containing the recap
-        text_elements = story_soup.find_all("p") # Obtain all text elements in the recaps
-        raw_text = [p.decode_contents().strip() for p in text_elements] # Break all text elements down into strings
-        raw_text_string = "\n".join(raw_text) # Join all strings together
-        processed_string = re.sub(r"<[^>]*>", "", raw_text_string) # Remove all HTML tags from the article
-        # Create and write the article to a file
-        recap_text_file = open("output/" + game_name + "/" + game_name + ".txt", 'w', encoding="utf-8")
-        recap_text_file.write(processed_string)
-        recap_text_file.close()
+        if story_soup is not None:
+            text_elements = story_soup.find_all("p") # Obtain all text elements in the recaps
+            raw_text = [p.decode_contents().strip() for p in text_elements] # Break all text elements down into strings
+            raw_text_string = "\n".join(raw_text) # Join all strings together
+            processed_string = re.sub(r"<[^>]*>", "", raw_text_string) # Remove all HTML tags from the article
+            # Create and write the article to a file
+            recap_text_file = open("output/" + game_name + "/" + game_name + ".txt", 'w', encoding="utf-8")
+            recap_text_file.write(processed_string)
+            recap_text_file.close()
+        else:
+            os.rmdir("output/" + game_name)
     week_number += 1

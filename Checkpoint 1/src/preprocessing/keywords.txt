@@ -1,0 +1,23 @@
+yard
+touchdown
+completion
+down
+comeback
+pass
+rush
+tackle
+interception
+fumble
+%
+victory
+pressure
+defeat
+loss
+win
+gain
+field goal
+conversion
+convert
+sack
+turnover
+penalty
